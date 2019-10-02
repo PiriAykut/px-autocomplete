@@ -1,26 +1,6 @@
 /*
 author  : Piri Aykut
 email   : piriaykut@hotmail.com
-
-<div id="objectid"></div>
-
-$("#objectid").pxautocomplete({ 
-            jsondata: [{ val: '1', image: null, text: 'value 1' }, ...],
-            name: "musteri",
-            maxheight: '100',
-            placeholder: '',
-            ajaxpage: 'stok/musteriara',
-            style: "background:#fff; color:#444",
-            focuscallback: function(e){
-
-            },
-            callback : function(){
-                
-            }
-        });
-
-$("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });
-
 */
 
 (function ($) {
@@ -40,17 +20,61 @@ $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/
 
         var defaults = {
             name: '',
-            ajaxpage: null,
             jsondata: null,
+            ajaxpage: null,
             maxheight: '300',
             style: null,
             placeholder: null,
             focuscallback: null,
             callback: null,
+            registered_text: 'registered',
+            new_text: 'new',
             alert_text: 'No record available!'
         };
 
         options = $.extend(defaults, options);
+
+        if (self.attr("data-name")!=undefined){
+            options.name = self.attr("data-name");
+        }else{
+            self.attr("data-name", options.name);
+        }
+
+        if (self.attr("data-placeholder")!=undefined){
+            options.placeholder = self.attr("data-placeholder");
+        }else{
+            self.attr("data-placeholder", options.placeholder);
+        }
+
+        if (self.attr("data-style")!=undefined){
+            options.style = self.attr("data-style");
+        }else{
+            self.attr("data-style", options.style);
+        }
+
+        if (self.attr("data-result-max-height")!=undefined){
+            options.maxheight = self.attr("data-result-max-height");
+        }else{
+            self.attr("data-result-max-height", options.maxheight);
+        }
+
+        if (self.attr("data-registered-text")!=undefined){
+            options.registered_text = self.attr("data-registered-text");
+        }else{
+            self.attr("data-registered-text", options.registered_text);
+        }
+
+        if (self.attr("data-new-text")!=undefined){
+            options.new_text = self.attr("data-new-text");
+        }else{
+            self.attr("data-new-text", options.new_text);
+        }
+
+        if (self.attr("data-alert-text")!=undefined){
+            options.alert_text = self.attr("data-alert-text");
+        }else{
+            self.attr("data-alert-text", options.alert_text);
+        }
 
         if (self.attr("name") != undefined) {
             options.name = self.attr("name");
@@ -107,9 +131,9 @@ $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/
                         $("[data-id='" + _id + "'] .search-container input[type='hidden']").val($("[data-id='" + _id + "'] .result-container li[data-value]").attr("data-value"));
                     }
 
-                    let _modname = (_val == "0" ? "new" : "saved");
+                    let _modname = (_val == "0" ? options.new_text : options.registered_text);
 
-                    $("[data-id='" + _id + "'] .status").addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? 'new' : 'registered'))
+                    $("[data-id='" + _id + "'] .status").addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
 
                     if (options.callback !== undefined) {
                         blur_timeout = setTimeout(function () {
@@ -186,7 +210,7 @@ $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/
 
                 status_clear();
 
-                $("[data-id='" + _id + "'] .status").addClass("saved").attr("data-status", "saved").html('registered')
+                $("[data-id='" + _id + "'] .status").addClass("saved").attr("data-status", "saved").html(options.registered_text)
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
 
                 if (options.callback !== undefined) {
@@ -329,7 +353,7 @@ $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/
                     }
                     $(".search-container input[type='text']", self).val(_data.text);
                     $(".search-container input[type='hidden']", self).val(_data.val);
-                    $(".status", self).addClass("saved").attr("data-status", "saved").html('registered');
+                    $(".status", self).addClass("saved").attr("data-status", "saved").html(self.attr("data-registered-text"));
 
                     break;
             }
