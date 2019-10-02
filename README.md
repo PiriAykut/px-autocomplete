@@ -45,4 +45,16 @@
 > $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });<br>
 
 ### view:
-![alt text](https://endavet.com/images/logo.webp)
+#### 1.
+![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_1.png)
+
+<br>
+
+#### 2.
+![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_2.png)
+
+<br>
+
+#### 3.
+![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_3.png)
+
