@@ -3,12 +3,19 @@
 > npm i jquery <br>
 > npm i pixi-autocomplete-jquery
 
+
 ## html
 > \<div id="objectid"\>\</div\>
 
 <br>
 
+## css
+> @import "~px-autocomplete-jquery/px-autocomplete.css";
+
 ## javascript - jquery
+require('px-autocomplete-jquery');
+
+
 ### init
 > $("#objectid").pixiautocomplete({ <br>
 >           jsondata: [{ val: '1', image: null, text: 'value 1' }, ...],<br>
