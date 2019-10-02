@@ -13,7 +13,7 @@
 > @import "~px-autocomplete-jquery/px-autocomplete.css";
 
 ## javascript - jquery
-require('px-autocomplete-jquery');
+> require('px-autocomplete-jquery');
 
 
 ### init
