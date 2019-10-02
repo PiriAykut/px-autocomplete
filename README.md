@@ -42,4 +42,7 @@
 <br>
 
 ### set data:
-> $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });
+> $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });<br>
+
+### view:
+![alt text](https://endavet.com/images/logo.webp)
