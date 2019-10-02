@@ -1,7 +1,7 @@
 
 ## install
-> npm install jquery <br>
-> npm install pixi-autocomplete-jquery
+> npm i jquery <br>
+> npm i pixi-autocomplete-jquery
 
 ## html
 > \<div id="objectid"\>\</div\>
