@@ -1,25 +1,27 @@
 {
-  "name": "pixi-autocomplete-jquery",
-  "version": "1.0.3",
+  "name": "px-autocomplete-jquery",
+  "version": "1.0.0",
   "description": "autocomplete input. json data or ajax compatible.",
-  "main": "pixi-autocomplete.js",
+  "main": "px-autocomplete.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/piriaykut/pixi-autocomplete.git"
+    "url": "git+https://github.com/PiriAykut/px-autocomplete.git"
   },
   "keywords": [
-    "pixi",
+    "px",
     "autocomplete",
-    "jquery"
+    "jquery",
+    "input",
+    "ajax",
+    "json"
   ],
   "author": "Piri AYKUT <piriaykut@hotmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/piriaykut/pixi-autocomplete/issues"
+    "url": "https://github.com/PiriAykut/px-autocomplete/issues"
   },
-  "homepage": "https://gitlab.com/piriaykut/pixi-autocomplete#readme",
-  "filename": "README.md"
+  "homepage": "https://github.com/PiriAykut/px-autocomplete#readme"
 }
