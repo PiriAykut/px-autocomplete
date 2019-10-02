@@ -5,8 +5,8 @@
 
 
 ## html
-> \<div id="objectid"\>\</div\>
-> or
+> \<div id="objectid"\>\</div\><br>
+> or<br>
 > \<div id="objectid" data-name="requestname" data-result-max-height="300" data-style="" data-placeholder="" data-new-text="new" data-registered-text="registered" data-alert-text="No record available!"\>\</div\>
 
 ### options attributes
@@ -36,12 +36,8 @@
 >            new_text: 'new',<br>
 >            alert_text: 'No record available!'<br>
 >            style: "background:#fff; color:#444",<br>
->            focuscallback: function(e){<br>
-><br>
->            },<br>
->            callback : function(){<br>
-><br>
->            }<br>
+>            focuscallback: function(e){},<br>
+>            callback : function(){}<br>
 >        });<br>
 <br>
 
