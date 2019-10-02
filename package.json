@@ -1,6 +1,6 @@
 {
   "name": "px-autocomplete-jquery",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "autocomplete input. json data or ajax compatible.",
   "main": "px-autocomplete.js",
   "scripts": {
