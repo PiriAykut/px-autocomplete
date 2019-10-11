@@ -42,11 +42,11 @@
 <br>
 
 ### ajax use
-> -- http://localhost/api/searchpage
+> **_URL:_** http://localhost/api/searchpage
 > <br><br>
-> -- PHP Code : <br>
+> **_PHP CODE EXAMPLE:_** <br>
 > $text = $_POST["text]; <br>
-> ...<br>
+> ... "your php codes"<br>
 > $resultdata = [['val' => 1, 'text' => 'data 1', 'image' => 'imageurl or null or undefined'], ...];<br>
 > echo json_encode($resultdata);<br>
 <br>
