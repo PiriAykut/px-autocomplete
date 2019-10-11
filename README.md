@@ -1,6 +1,6 @@
 
 ## install
-> npm i jquery <br>
+> npm i jquery <br><br>
 > npm i px-autocomplete-jquery
 
 
@@ -27,8 +27,8 @@
 
 ### init
 > $("#objectid").pxautocomplete({ <br>
->            jsondata: [{ val: '1', image: null, text: 'value 1' }, ...],<br>
->            ajaxpage: 'stok/musteriara',<br>
+>            jsondata: [{ val: '1', image: null, text: 'data 1' }, ...],<br>
+>            ajaxpage: 'api/searchpage',<br>
 >            name: "requestname",<br>
 >            maxheight: '100',<br>
 >            placeholder: '',<br>
@@ -40,6 +40,17 @@
 >            callback : function(){}<br>
 >        });<br>
 <br>
+
+### ajax use
+> -- http://localhost/api/searchpage
+> <br><br>
+> -- PHP Code : <br>
+> $text = $_POST["text]; <br>
+> ...<br>
+> $resultdata = [['val' => 1, 'text' => 'data 1', 'image' => 'imageurl or null or undefined'], ...];<br>
+> echo json_encode($resultdata);<br>
+<br>
+
 
 ### set data:
 > $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });<br>

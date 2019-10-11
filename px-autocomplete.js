@@ -34,51 +34,55 @@ email   : piriaykut@hotmail.com
 
         options = $.extend(defaults, options);
 
-        if (self.attr("data-name")!=undefined){
+        if (self.attr("data-name") != undefined) {
             options.name = self.attr("data-name");
-        }else{
+        } else {
             self.attr("data-name", options.name);
         }
 
-        if (self.attr("data-placeholder")!=undefined){
+        if (self.attr("data-placeholder") != undefined) {
             options.placeholder = self.attr("data-placeholder");
-        }else{
+        } else {
             self.attr("data-placeholder", options.placeholder);
         }
 
-        if (self.attr("data-style")!=undefined){
+        if (self.attr("data-style") != undefined) {
             options.style = self.attr("data-style");
-        }else{
+        } else {
             self.attr("data-style", options.style);
         }
 
-        if (self.attr("data-result-max-height")!=undefined){
+        if (self.attr("data-result-max-height") != undefined) {
             options.maxheight = self.attr("data-result-max-height");
-        }else{
+        } else {
             self.attr("data-result-max-height", options.maxheight);
         }
 
-        if (self.attr("data-registered-text")!=undefined){
+        if (self.attr("data-registered-text") != undefined) {
             options.registered_text = self.attr("data-registered-text");
-        }else{
+        } else {
             self.attr("data-registered-text", options.registered_text);
         }
 
-        if (self.attr("data-new-text")!=undefined){
+        if (self.attr("data-new-text") != undefined) {
             options.new_text = self.attr("data-new-text");
-        }else{
+        } else {
             self.attr("data-new-text", options.new_text);
         }
 
-        if (self.attr("data-alert-text")!=undefined){
+        if (self.attr("data-alert-text") != undefined) {
             options.alert_text = self.attr("data-alert-text");
-        }else{
+        } else {
             self.attr("data-alert-text", options.alert_text);
         }
 
         if (self.attr("name") != undefined) {
             options.name = self.attr("name");
             self.removeAttr("name");
+        }
+
+        if (options.alert_text == null || options.alert_text == "") {
+            options.alert_text = "Kayıt mevcut değil!";
         }
 
         let _id = getMyGUID();
@@ -163,7 +167,7 @@ email   : piriaykut@hotmail.com
                     getMyFilter($(this).val());
                 } else {
                     let _text = $(this).val();
-                    
+
                     show_spin();
 
                     if (search_timeout != null) {
@@ -179,7 +183,7 @@ email   : piriaykut@hotmail.com
             .on("click", "[data-id='" + _id + "'] .result-container li", function () {
                 if ($(this).hasClass("nodata")) return;
 
-                if (blur_timeout!=null){
+                if (blur_timeout != null) {
                     clearTimeout(blur_timeout);
                     blur_timeout = null;
                 }
@@ -242,13 +246,36 @@ email   : piriaykut@hotmail.com
                 create_result_items(sonuc);
 
             } else if (options.ajaxpage != null) {
-                core.run(options.ajaxpage, { text: _text }, function (e) {
-                    if (!$("[data-id='" + _id + "'] .result-container").hasClass("open"))
-                        $("[data-id='" + _id + "'] .result-container").addClass("open");
-                    if (e.durum) {
-                        create_result_items(e.data);
-                    } else {
-                        $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': ($('meta[name="csrf-token"]').length > 0 ? $('meta[name="csrf-token"]').attr('content') : '')
+                    },
+                    type: "POST",
+                    url: window.location.origin + "/" + options.ajaxpage,
+                    data: "text=" + encodeURIComponent(_text),
+                    timeout: 30000,
+                    success: function (e) {
+                        if (e === null) {
+                            return;
+                        }
+                        try {
+                            e = JSON.parse(e);
+
+                            if (!$("[data-id='" + _id + "'] .result-container").hasClass("open"))
+                                $("[data-id='" + _id + "'] .result-container").addClass("open");
+
+                            if (e.durum) {
+                                create_result_items(e.data);
+                            } else {
+                                $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
+                            }
+
+                        }
+                        catch (e) {
+                        }
+                    },
+                    error: function (err) {
+                        console.log("Error px-autocomplete ajax : " + err.status + "\n" + err.statusText + "\n\n" + err.responseText);
                     }
                 });
             }
@@ -270,7 +297,7 @@ email   : piriaykut@hotmail.com
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li data-value="' + el.val + '" ' + (el.image !== undefined ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined ? '<img src="' + el.image + '" />' : '') + el.text + '</li>';
+                        value_items += '<li data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" />' : '') + el.text + '</li>';
                     }
                 } else {
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
