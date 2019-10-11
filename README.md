@@ -41,13 +41,13 @@
 >        });<br>
 <br>
 
-### ajax use
+### using php with ajax
 > **_URL:_** http://localhost/api/searchpage
 > <br><br>
-> **_PHP CODE EXAMPLE:_** <br>
-> $text = $_POST["text]; <br>
-> ... "your php codes"<br>
-> $resultdata = [['val' => 1, 'text' => 'data 1', 'image' => 'imageurl or null or undefined'], ...];<br>
+> **_PHP CODE EXAMPLE:_** <br><br>
+> $text = $_POST["text"]; <br><br>
+> ... "your php codes" ...<br><br>
+> $resultdata = [['val' => 1, 'text' => 'data 1', 'image' => 'imageurl or null or undefined'], ...];<br><br>
 > echo json_encode($resultdata);<br>
 <br>
 
