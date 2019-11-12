@@ -3,8 +3,8 @@ author  : Piri Aykut
 email   : piriaykut@hotmail.com
 */
 
-(function ($) {
-    $.fn.pxautocomplete = function (options, _data) {
+(function($) {
+    $.fn.pxautocomplete = function(options, _data) {
         var mainclass = "px-auto-complete";
         var self = this;
         var search_timeout = null;
@@ -93,6 +93,7 @@ email   : piriaykut@hotmail.com
             '   <img src="//:0" />' +
             '   <input type="hidden" name="' + options.name + 'id" value="" />' +
             '   <input type="text" name="' + options.name + 'text" value="" ' + (options.placeholder !== null ? 'placeholder="' + options.placeholder + '"' : '') + ' />' +
+            '   <i class="fa fa-exclamation-triangle d-none"></i>' +
             '   <i class="fa fa-search"></i>' +
             '   <i class="fa fa-spinner fa-spin d-none"></i>' +
             '</div>' +
@@ -102,9 +103,9 @@ email   : piriaykut@hotmail.com
             self.attr("style", options.style);
         }
 
-        create_result_items(options.jsondata);
+        create_result_items("", options.jsondata);
 
-        $(window).bind('click', function (event) {
+        $(window).bind('click', function(event) {
             if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container')) {
                 return;
             }
@@ -114,17 +115,20 @@ email   : piriaykut@hotmail.com
         });
 
         $("body")
-            .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
+            .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
                 if (options.ajaxpage != null) {
-                    show_spin();
                     getMyFilter($(this).val());
                 }
 
-                if (options.focuscallback !== undefined) {
-                    options.focuscallback(self);
+                if (options.focuscallback !== undefined && options.focuscallback != null) {
+                    if (options.focuscallback.length > 0)
+                        options.focuscallback(self);
+                    else
+                        options.focuscallback();
                 }
             })
-            .on("blur", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
+            .on("blur", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+                return;
                 let _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
                 let _text = $(this).val();
 
@@ -135,27 +139,34 @@ email   : piriaykut@hotmail.com
                         $("[data-id='" + _id + "'] .search-container input[type='hidden']").val($("[data-id='" + _id + "'] .result-container li[data-value]").attr("data-value"));
                     }
 
-                    let _modname = (_val == "0" ? options.new_text : options.registered_text);
+                    let _modname = (_val == "0" ? "new" : "saved");
+                    let _othermodname = (_val == "0" ? "saved" : "new");
 
-                    $("[data-id='" + _id + "'] .status").addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
+                    $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
 
-                    if (options.callback !== undefined) {
-                        blur_timeout = setTimeout(function () {
+                    if (options.callback !== undefined && options.callback != null) {
+                        blur_timeout = setTimeout(function() {
+                            _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
+                            _text = $("[data-id='" + _id + "'] .search-container input[type='text']").val();
+
                             options.callback({ object: self, val: (_val == "0" ? null : _val), text: _text.trim() });
-                        }, 800);
+                        }, 1200);
                     }
                 } else {
-                    if (options.callback !== undefined) {
-                        blur_timeout = setTimeout(function () {
+                    if (options.callback !== undefined && options.callback != null) {
+                        blur_timeout = setTimeout(function() {
+                            _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
+                            _text = $("[data-id='" + _id + "'] .search-container input[type='text']").val();
+
                             options.callback({ object: self, val: (_val == "0" ? null : _val), text: _text.trim() });
-                        }, 800);
+                        }, 1200);
                     }
                 }
             })
-            .on("mouseleave", "[data-id='" + _id + "']", function () {
+            .on("mouseleave", "[data-id='" + _id + "']", function() {
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
             })
-            .on("input", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
+            .on("input", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
                 $("[data-id='" + _id + "'] .search-container input[type='hidden']").val("0");
 
                 status_clear();
@@ -168,19 +179,17 @@ email   : piriaykut@hotmail.com
                 } else {
                     let _text = $(this).val();
 
-                    show_spin();
-
                     if (search_timeout != null) {
                         clearTimeout(search_timeout);
                         search_timeout = null;
                     }
 
-                    search_timeout = setTimeout(function () {
+                    search_timeout = setTimeout(function() {
                         getMyFilter(_text);
-                    }, 300);
+                    }, 500);
                 }
             })
-            .on("click", "[data-id='" + _id + "'] .result-container li", function () {
+            .on("click", "[data-id='" + _id + "'] .result-container li", function() {
                 if ($(this).hasClass("nodata")) return;
 
                 if (blur_timeout != null) {
@@ -214,24 +223,56 @@ email   : piriaykut@hotmail.com
 
                 status_clear();
 
-                $("[data-id='" + _id + "'] .status").addClass("saved").attr("data-status", "saved").html(options.registered_text)
+                $("[data-id='" + _id + "'] .status").removeClass("new").addClass("saved").attr("data-status", "saved").html(options.registered_text)
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
 
-                if (options.callback !== undefined) {
+                if (options.callback !== undefined && options.callback != null) {
                     options.callback({ object: self, val: _val, text: $(this).html() });
                 }
             });
+
         function show_spin() {
+
+            $("[data-id='" + _id + "'] .search-container .status").addClass('d-none');
             $("[data-id='" + _id + "'] .search-container .fa.fa-search").addClass('d-none');
             $("[data-id='" + _id + "'] .search-container .fa.fa-spinner").removeClass('d-none');
+
+            if (!$("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").hasClass('d-none')) {
+                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").hasClass('d-none');
+            }
+            if ($("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").attr("title") != undefined) {
+                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").removeAttr("title");
+            }
         }
+
+        function hide_spin(_iserror = false) {
+            if ($("[data-id='" + _id + "'] .search-container .status").hasClass('d-none')) {
+                $("[data-id='" + _id + "'] .search-container .status").removeClass('d-none');
+            }
+            $("[data-id='" + _id + "'] .search-container .fa.fa-search").removeClass('d-none');
+            $("[data-id='" + _id + "'] .search-container .fa.fa-spinner").addClass('d-none');
+
+            if (_iserror) {
+                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").removeClass('d-none');
+            }
+        }
+
         function status_clear() {
             let statusObj = "[data-id='" + _id + "'] .status";
             if ($(statusObj).attr("data-status") !== undefined) {
                 $(statusObj).removeClass($(statusObj).attr("data-status")).removeAttr("data-status");
             }
+            $(statusObj).html('').removeClass('new').removeClass('saved');
+
         }
+
         function getMyFilter(_text) {
+            show_spin();
+
+            if ($("[data-id='" + _id + "'] .result-container").attr("data-container") != undefined) {
+                $("[data-id='" + _id + "'] .result-container").removeAttr("data-container");
+            }
+
             if (options.jsondata != null) {
                 let sonuc = null;
                 if (_text.trim() != "") {
@@ -243,9 +284,10 @@ email   : piriaykut@hotmail.com
                 if (!$("[data-id='" + _id + "'] .result-container").hasClass("open"))
                     $("[data-id='" + _id + "'] .result-container").addClass("open");
 
-                create_result_items(sonuc);
+                create_result_items(_text, sonuc);
 
             } else if (options.ajaxpage != null) {
+
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': ($('meta[name="csrf-token"]').length > 0 ? $('meta[name="csrf-token"]').attr('content') : '')
@@ -254,7 +296,9 @@ email   : piriaykut@hotmail.com
                     url: window.location.origin + "/" + options.ajaxpage,
                     data: "text=" + encodeURIComponent(_text),
                     timeout: 30000,
-                    success: function (e) {
+                    success: function(e) {
+                        hide_spin();
+
                         if (e === null) {
                             return;
                         }
@@ -265,23 +309,25 @@ email   : piriaykut@hotmail.com
                                 $("[data-id='" + _id + "'] .result-container").addClass("open");
 
                             if (e.durum) {
-                                create_result_items(e.data);
+                                create_result_items(_text, e.data);
                             } else {
                                 $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
                             }
 
-                        }
-                        catch (e) {
-                        }
+                        } catch (e) {}
                     },
-                    error: function (err) {
-                        console.log("Error px-autocomplete ajax : " + err.status + "\n" + err.statusText + "\n\n" + err.responseText);
+                    error: function(err) {
+                        hide_spin(true);
+                        create_result_items(_text, null);
+                        console.log("Error px-autocomplete ajax : " + err.status + "\n" + err.statusText); // + "\n\n" + err.responseText);
+                        console.log(err);
+                        $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").attr("title", "Error px-autocomplete ajax : " + err.status + "\n" + err.statusText);
                     }
                 });
             }
         }
 
-        function create_result_items(_jsondata) {
+        function create_result_items(_text, _jsondata) {
             let value_items = '';
             if (_jsondata != null) {
                 if (!$.isArray(_jsondata)) {
@@ -306,10 +352,54 @@ email   : piriaykut@hotmail.com
                 value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
             }
 
-            $("[data-id='" + _id + "'] .result-container").html(value_items);
+            $("[data-id='" + _id + "'] .result-container").attr("data-container", btoa(unescape(encodeURIComponent(JSON.stringify(_jsondata))))).html(value_items);
 
-            $("[data-id='" + _id + "'] .search-container .fa.fa-search").removeClass('d-none');
-            $("[data-id='" + _id + "'] .search-container .fa.fa-spinner").addClass('d-none');
+            if (_text != '') {
+                let _selval = '0';
+                let _seltext = '';
+
+                if (_jsondata != null && _jsondata.length > 0) {
+                    for (let i = 0; i < _jsondata.length; i++) {
+                        const el = _jsondata[i];
+                        if (getMyslugify(el.text) == getMyslugify(_text)) {
+                            _selval = el.val;
+                            _seltext = el.text;
+
+                            $("[data-id='" + _id + "'] .search-container input[type='hidden']").val(el.val);
+                            break;
+                        }
+                    }
+                }
+
+                let _modname = (_selval == "0" ? "new" : "saved");
+                let _othermodname = (_selval == "0" ? "saved" : "new");
+
+                $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
+
+                if (options.callback !== undefined && options.callback != null) {
+                    options.callback({ object: self, val: (_selval == "0" ? null : _selval), text: _seltext.trim() });
+                }
+            }
+            hide_spin();
+        }
+
+        function getMyslugify(text) {
+            var trMap = {
+                'çÇ': 'c',
+                'ğĞ': 'g',
+                'şŞ': 's',
+                'üÜ': 'u',
+                'ıİ': 'i',
+                'öÖ': 'o'
+            };
+            for (var key in trMap) {
+                text = text.replace(new RegExp('[' + key + ']', 'g'), trMap[key]);
+            }
+            return text.replace(/[^-a-zA-Z0-9\s]+/ig, '') // remove non-alphanumeric chars
+                .replace(/\s/gi, "-") // convert spaces to dashes
+                .replace(/[-]+/gi, "-") // trim repeated dashes
+                .toLowerCase();
+
         }
 
         function getMyGUID() {
