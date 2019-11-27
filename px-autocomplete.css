@@ -16,17 +16,22 @@
     display: none;
     position: absolute;
     right: 5px;
-    top: 8px;
+    top: 6px;
     padding: 3px 5px;
     font-size: 11px;
     z-index: 2;
+    border-radius: 3px;
 }
 
 .px-auto-complete i.fa {
     position: absolute;
     right: 10px;
-    top: 9px;
+    top: 3px;
     z-index: 1;
+}
+.px-auto-complete i.fa-search {
+    color: #c1c1c1;
+    font-size: 18px;
 }
 
 .px-auto-complete i.fa.fa-exclamation-triangle {

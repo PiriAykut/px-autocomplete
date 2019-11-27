@@ -20,6 +20,8 @@ email   : piriaykut@hotmail.com
 
         var defaults = {
             name: '',
+            selected_value: null,
+            selected_text: null,
             jsondata: null,
             ajaxpage: null,
             maxheight: '300',
@@ -33,6 +35,33 @@ email   : piriaykut@hotmail.com
         };
 
         options = $.extend(defaults, options);
+
+        if (self.prop('tagName') === "SELECT"){
+            let jdata = [];
+
+            if ($("option:selected", self).length > 0){
+                options.selected_value = $("option:selected", self).attr("value").trim();
+                options.selected_text = $("option:selected", self).html().trim();
+            }
+
+            $("option", self).each(function(){
+                jdata.push({val: $(this).attr("value").trim(), text: $(this).html().trim() });
+            });
+
+            self.removeClass('form-control');
+            let id = self.attr("id");
+            let obj = '<div id="' + id + '" ' + (self.attr("class") !== undefined ? 'class="' + self.attr("class") + '"' : '') + '></div>';
+
+            self.after(obj);
+            self.remove();
+            let name = self.attr("name");
+            self = $("#" + id);
+
+            options.jsondata = jdata;
+            if (name != undefined && name != null){
+                options.name = name;
+            }
+        }
 
         if (self.attr("data-name") != undefined) {
             options.name = self.attr("data-name");
@@ -86,13 +115,19 @@ email   : piriaykut@hotmail.com
         }
 
         let _id = getMyGUID();
+        
+        let def_status_html = '<span class="status"></span>';
+
+        if(options.selected_value != null){
+            def_status_html = '<span class="status saved" data-status="saved">' + options.registered_text + '</span>';
+        }
 
         self.attr("data-id", _id).addClass(mainclass).html(
-            '<span class="status"></span>' +
+            def_status_html +
             '<div class="search-container">' +
             '   <img src="//:0" />' +
-            '   <input type="hidden" name="' + options.name + 'id" value="" />' +
-            '   <input type="text" name="' + options.name + 'text" value="" ' + (options.placeholder !== null ? 'placeholder="' + options.placeholder + '"' : '') + ' />' +
+            '   <input type="hidden" name="' + options.name + 'id" value="' + (options.selected_value != null ? options.selected_value : '') + '" />' +
+            '   <input type="text" name="' + options.name + 'text" value="' + (options.selected_text != null ? options.selected_text : '') + '" ' + (options.placeholder !== null ? 'placeholder="' + options.placeholder + '"' : '') + ' />' +
             '   <i class="fa fa-exclamation-triangle d-none"></i>' +
             '   <i class="fa fa-search"></i>' +
             '   <i class="fa fa-spinner fa-spin d-none"></i>' +
@@ -106,7 +141,7 @@ email   : piriaykut@hotmail.com
         create_result_items("", options.jsondata);
 
         $(window).bind('click', function(event) {
-            if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container')) {
+            if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container')|| $(event.target).parents().hasClass('search-container')) {
                 return;
             }
             if ($(".result-container.open").length > 0) {
@@ -115,10 +150,15 @@ email   : piriaykut@hotmail.com
         });
 
         $("body")
+            .on("click", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+                $(this).trigger("focus");
+            })
             .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
-                if (options.ajaxpage != null) {
+                $(this).select();
+
+                //if (options.ajaxpage != null) {
                     getMyFilter($(this).val());
-                }
+                //}
 
                 if (options.focuscallback !== undefined && options.focuscallback != null) {
                     if (options.focuscallback.length > 0)
@@ -297,8 +337,7 @@ email   : piriaykut@hotmail.com
                     data: "text=" + encodeURIComponent(_text),
                     timeout: 30000,
                     success: function(e) {
-                        hide_spin();
-
+                        
                         if (e === null) {
                             return;
                         }
@@ -327,6 +366,7 @@ email   : piriaykut@hotmail.com
             }
         }
 
+        var timeout_spin = null;
         function create_result_items(_text, _jsondata) {
             let value_items = '';
             if (_jsondata != null) {
@@ -374,13 +414,22 @@ email   : piriaykut@hotmail.com
                 let _modname = (_selval == "0" ? "new" : "saved");
                 let _othermodname = (_selval == "0" ? "saved" : "new");
 
-                $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
+                if (timeout_spin != null){
+                    clearTimeout(timeout_spin);
+                }
+
+                timeout_spin = setTimeout(function() {
+                    $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text));
+                    hide_spin();
+                }, 500);
 
                 if (options.callback !== undefined && options.callback != null) {
                     options.callback({ object: self, val: (_selval == "0" ? null : _selval), text: _seltext.trim() });
                 }
+            }else{
+                hide_spin();
             }
-            hide_spin();
+            
         }
 
         function getMyslugify(text) {

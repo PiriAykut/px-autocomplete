@@ -8,6 +8,12 @@
 > \<div id="objectid"\>\</div\><br>
 > or<br>
 > \<div id="objectid" data-name="requestname" data-result-max-height="300" data-style="" data-placeholder="" data-new-text="new" data-registered-text="registered" data-alert-text="No record available!"\>\</div\>
+> or<br>
+> \<select id="objectid" name="city"\><br>
+>   \<option valeu="01"\>Adana\</option\><br>
+>   \<option valeu="06" selected="true"\>Ankara\</option\><br>
+>   \<option valeu="16"\>Bursa\</option\><br>
+> \</select\>
 
 #### options attributes
 > data-name="requestname" <br>
@@ -30,6 +36,8 @@
 >            jsondata: [{ val: '1', image: null, text: 'data 1' }, ...],<br>
 >            ajaxpage: 'api/searchpage',<br>
 >            name: "requestname",<br>
+>            selected_value: null,<br>
+>            selected_text: null,<br>
 >            maxheight: '100',<br>
 >            placeholder: '',<br>
 >            registered_text: 'registered',<br>
