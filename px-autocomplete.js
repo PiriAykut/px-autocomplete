@@ -1,14 +1,16 @@
 /*
-author  : Piri Aykut
-email   : piriaykut@hotmail.com
+author      : Piri Aykut
+email       : piriaykut@hotmail.com
+create date : 04.11.2019
 */
 
-(function($) {
-    $.fn.pxautocomplete = function(options, _data) {
+(function ($) {
+    $.fn.pxautocomplete = function (options, _data) {
         var mainclass = "px-auto-complete";
         var self = this;
         var search_timeout = null;
         var blur_timeout = null;
+        var first_ajax_data = null;
 
         if ((typeof options) === "string") {
             myExtraMethod(options, _data);
@@ -29,6 +31,7 @@ email   : piriaykut@hotmail.com
             placeholder: null,
             focuscallback: null,
             callback: null,
+            image_title: 'Show Image',
             registered_text: 'registered',
             new_text: 'new',
             alert_text: 'No record available!'
@@ -36,16 +39,16 @@ email   : piriaykut@hotmail.com
 
         options = $.extend(defaults, options);
 
-        if (self.prop('tagName') === "SELECT"){
+        if (self.prop('tagName') === "SELECT") {
             let jdata = [];
 
-            if ($("option:selected", self).length > 0){
+            if ($("option:selected", self).length > 0) {
                 options.selected_value = $("option:selected", self).attr("value").trim();
                 options.selected_text = $("option:selected", self).html().trim();
             }
 
-            $("option", self).each(function(){
-                jdata.push({val: $(this).attr("value").trim(), text: $(this).html().trim() });
+            $("option", self).each(function () {
+                jdata.push({ val: $(this).attr("value").trim(), text: $(this).html().trim() });
             });
 
             self.removeClass('form-control');
@@ -58,7 +61,7 @@ email   : piriaykut@hotmail.com
             self = $("#" + id);
 
             options.jsondata = jdata;
-            if (name != undefined && name != null){
+            if (name != undefined && name != null) {
                 options.name = name;
             }
         }
@@ -115,19 +118,20 @@ email   : piriaykut@hotmail.com
         }
 
         let _id = getMyGUID();
-        
+
         let def_status_html = '<span class="status"></span>';
 
-        if(options.selected_value != null){
+        if (options.selected_value != null) {
             def_status_html = '<span class="status saved" data-status="saved">' + options.registered_text + '</span>';
         }
 
+        var noimage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAg0AAAGlCAIAAAD23VLdAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkUxQTQyRkMyRkNCMjExRTM5NTU4OTZEQkJFNzU1OEY1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkUxQTQyRkMzRkNCMjExRTM5NTU4OTZEQkJFNzU1OEY1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RTFBNDJGQzBGQ0IyMTFFMzk1NTg5NkRCQkU3NTU4RjUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RTFBNDJGQzFGQ0IyMTFFMzk1NTg5NkRCQkU3NTU4RjUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7hkGSKAAAPo0lEQVR42uzd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';
         self.attr("data-id", _id).addClass(mainclass).html(
             def_status_html +
             '<div class="search-container">' +
-            '   <img src="//:0" />' +
+            '   <a href="" class="aimage" target="_blank" title="' + options.image_title + '"><img src="//:0" onerror="this.src=\'' + noimage + '\';" /><div class="hover-image"><img src="//:0" onerror="this.src=\'' + noimage + '\';" /></div></a>' +
             '   <input type="hidden" name="' + options.name + 'id" value="' + (options.selected_value != null ? options.selected_value : '') + '" />' +
-            '   <input type="text" name="' + options.name + 'text" value="' + (options.selected_text != null ? options.selected_text : '') + '" ' + (options.placeholder !== null ? 'placeholder="' + options.placeholder + '"' : '') + ' />' +
+            '   <input type="text" autocomplete="off" name="' + options.name + 'text" value="' + (options.selected_text != null ? options.selected_text : '') + '" ' + (options.placeholder !== null ? 'placeholder="' + options.placeholder + '"' : '') + ' />' +
             '   <i class="fa fa-exclamation-triangle d-none"></i>' +
             '   <i class="fa fa-search"></i>' +
             '   <i class="fa fa-spinner fa-spin d-none"></i>' +
@@ -138,27 +142,30 @@ email   : piriaykut@hotmail.com
             self.attr("style", options.style);
         }
 
-        create_result_items("", options.jsondata);
+        show_icon('default');
 
-        $(window).bind('click', function(event) {
-            if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container')|| $(event.target).parents().hasClass('search-container')) {
+        $(window).bind('click', function (event) {
+            if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container') || $(event.target).parents().hasClass('search-container')) {
                 return;
             }
             if ($(".result-container.open").length > 0) {
                 $(".result-container.open").removeClass("open")
             }
         });
+        $(window).bind('load', function (event) {
+            if ($(".result-container.open").length > 0) {
+                $(".result-container.open").removeClass("open")
+            }
+        });
 
         $("body")
-            .on("click", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+            .on("click", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 $(this).trigger("focus");
             })
-            .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+            .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 $(this).select();
 
-                //if (options.ajaxpage != null) {
-                    getMyFilter($(this).val());
-                //}
+                get_autocomplate_data($(this).val());
 
                 if (options.focuscallback !== undefined && options.focuscallback != null) {
                     if (options.focuscallback.length > 0)
@@ -167,7 +174,7 @@ email   : piriaykut@hotmail.com
                         options.focuscallback();
                 }
             })
-            .on("blur", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+            .on("blur", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 return;
                 let _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
                 let _text = $(this).val();
@@ -185,7 +192,7 @@ email   : piriaykut@hotmail.com
                     $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text))
 
                     if (options.callback !== undefined && options.callback != null) {
-                        blur_timeout = setTimeout(function() {
+                        blur_timeout = setTimeout(function () {
                             _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
                             _text = $("[data-id='" + _id + "'] .search-container input[type='text']").val();
 
@@ -194,7 +201,7 @@ email   : piriaykut@hotmail.com
                     }
                 } else {
                     if (options.callback !== undefined && options.callback != null) {
-                        blur_timeout = setTimeout(function() {
+                        blur_timeout = setTimeout(function () {
                             _val = $("[data-id='" + _id + "'] .search-container input[type='hidden']").val();
                             _text = $("[data-id='" + _id + "'] .search-container input[type='text']").val();
 
@@ -203,33 +210,31 @@ email   : piriaykut@hotmail.com
                     }
                 }
             })
-            .on("mouseleave", "[data-id='" + _id + "']", function() {
+            .on("mouseleave", "[data-id='" + _id + "']", function () {
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
             })
-            .on("input", "[data-id='" + _id + "'] .search-container input[type='text']", function() {
+            .on("input", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 $("[data-id='" + _id + "'] .search-container input[type='hidden']").val("0");
-
-                status_clear();
-
+                
                 if ($("[data-id='" + _id + "'] .search-container").hasClass('show-image'))
                     $("[data-id='" + _id + "'] .search-container").removeClass('show-image');
 
-                if (options.ajaxpage == null) {
-                    getMyFilter($(this).val());
-                } else {
-                    let _text = $(this).val();
+                let _text = $(this).val();
 
+                if (options.ajaxpage == null) {
+                    get_autocomplate_data(_text);
+                } else {
                     if (search_timeout != null) {
                         clearTimeout(search_timeout);
                         search_timeout = null;
                     }
 
-                    search_timeout = setTimeout(function() {
-                        getMyFilter(_text);
-                    }, 500);
-                }
+                    search_timeout = setTimeout(function () {
+                        get_autocomplate_data(_text);
+                    }, 100);
+                }            
             })
-            .on("click", "[data-id='" + _id + "'] .result-container li", function() {
+            .on("click", "[data-id='" + _id + "'] .result-container li", function () {
                 if ($(this).hasClass("nodata")) return;
 
                 if (blur_timeout != null) {
@@ -256,14 +261,14 @@ email   : piriaykut@hotmail.com
                         $("[data-id='" + _id + "'] .search-container").addClass('show-image');
 
                     $("[data-id='" + _id + "'] .search-container img").attr("src", $(this).attr("data-image"));
+                    $("[data-id='" + _id + "'] .search-container img").parent().attr("href", $(this).attr("data-image"));
                 }
 
                 $("[data-id='" + _id + "'] .search-container input[type='text']").val(_text);
                 $("[data-id='" + _id + "'] .search-container input[type='hidden']").val(_val);
 
-                status_clear();
+                show_icon('status-save');
 
-                $("[data-id='" + _id + "'] .status").removeClass("new").addClass("saved").attr("data-status", "saved").html(options.registered_text)
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
 
                 if (options.callback !== undefined && options.callback != null) {
@@ -271,47 +276,10 @@ email   : piriaykut@hotmail.com
                 }
             });
 
-        function show_spin() {
 
-            $("[data-id='" + _id + "'] .search-container .status").addClass('d-none');
-            $("[data-id='" + _id + "'] .search-container .fa.fa-search").addClass('d-none');
-            $("[data-id='" + _id + "'] .search-container .fa.fa-spinner").removeClass('d-none');
 
-            if (!$("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").hasClass('d-none')) {
-                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").hasClass('d-none');
-            }
-            if ($("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").attr("title") != undefined) {
-                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").removeAttr("title");
-            }
-        }
-
-        function hide_spin(_iserror = false) {
-            if ($("[data-id='" + _id + "'] .search-container .status").hasClass('d-none')) {
-                $("[data-id='" + _id + "'] .search-container .status").removeClass('d-none');
-            }
-            $("[data-id='" + _id + "'] .search-container .fa.fa-search").removeClass('d-none');
-            $("[data-id='" + _id + "'] .search-container .fa.fa-spinner").addClass('d-none');
-
-            if (_iserror) {
-                $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").removeClass('d-none');
-            }
-        }
-
-        function status_clear() {
-            let statusObj = "[data-id='" + _id + "'] .status";
-            if ($(statusObj).attr("data-status") !== undefined) {
-                $(statusObj).removeClass($(statusObj).attr("data-status")).removeAttr("data-status");
-            }
-            $(statusObj).html('').removeClass('new').removeClass('saved');
-
-        }
-
-        function getMyFilter(_text) {
-            show_spin();
-
-            if ($("[data-id='" + _id + "'] .result-container").attr("data-container") != undefined) {
-                $("[data-id='" + _id + "'] .result-container").removeAttr("data-container");
-            }
+        function get_autocomplate_data(_text) {
+            show_icon('spin');
 
             if (options.jsondata != null) {
                 let sonuc = null;
@@ -321,53 +289,89 @@ email   : piriaykut@hotmail.com
                     sonuc = options.jsondata;
                 }
 
-                if (!$("[data-id='" + _id + "'] .result-container").hasClass("open"))
-                    $("[data-id='" + _id + "'] .result-container").addClass("open");
-
                 create_result_items(_text, sonuc);
 
             } else if (options.ajaxpage != null) {
+                let isrunajax = (_text.trim() != "" || (_text.trim() == "" && first_ajax_data == null));
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': ($('meta[name="csrf-token"]').length > 0 ? $('meta[name="csrf-token"]').attr('content') : '')
-                    },
-                    type: "POST",
-                    url: window.location.origin + "/" + options.ajaxpage,
-                    data: "text=" + encodeURIComponent(_text),
-                    timeout: 30000,
-                    success: function(e) {
-                        
-                        if (e === null) {
-                            return;
-                        }
-                        try {
-                            e = JSON.parse(e);
+                if (isrunajax) {
 
-                            if (!$("[data-id='" + _id + "'] .result-container").hasClass("open"))
-                                $("[data-id='" + _id + "'] .result-container").addClass("open");
-
-                            if (e.durum) {
-                                create_result_items(_text, e.data);
-                            } else {
-                                $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': ($('meta[name="csrf-token"]').length > 0 ? $('meta[name="csrf-token"]').attr('content') : '')
+                        },
+                        type: "POST",
+                        url: window.location.origin + "/" + options.ajaxpage,
+                        data: "text=" + encodeURIComponent(_text),
+                        timeout: 15000,
+                        success: function (e) {
+                            if (e === null) {
+                                return;
                             }
+                            try {
+                                e = JSON.parse(e);
 
-                        } catch (e) {}
-                    },
-                    error: function(err) {
-                        hide_spin(true);
-                        create_result_items(_text, null);
-                        console.log("Error px-autocomplete ajax : " + err.status + "\n" + err.statusText); // + "\n\n" + err.responseText);
-                        console.log(err);
-                        $("[data-id='" + _id + "'] .search-container .fa.fa-exclamation-triangle").attr("title", "Error px-autocomplete ajax : " + err.status + "\n" + err.statusText);
-                    }
-                });
+                                if (e.durum) {
+                                    if (first_ajax_data == null) {
+                                        first_ajax_data = e.data;
+                                    }
+
+                                    create_result_items(_text, e.data);
+                                } else {
+                                    if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
+                                        $("[data-id='" + _id + "'] .result-container").addClass("open");
+                                    }
+
+                                    $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
+                                }
+                            } catch (e) { }
+                        },
+                        error: function (err) {
+                            let _msj = "Error px-autocomplete ajax : " + err.status + "\n" + err.statusText;
+                            console.log(_msj);
+                            console.log(err);
+
+                            show_icon('error', _msj)
+                        }
+                    });
+                } else if (_text.trim() == "" && first_ajax_data != null) {
+                    create_result_items('', first_ajax_data);
+                }
             }
         }
 
-        var timeout_spin = null;
+        function show_icon(_vl, _title) {
+            let cont = "[data-id='" + _id + "'] ";
+            $(cont + ".status").addClass('d-none').removeClass("new").removeClass("saved").attr("data-status", "").html("");
+            $(cont + ".search-container .fa:not(.d-none)").addClass('d-none');
+
+            switch (_vl) {
+                case 'spin':
+                    $(cont + ".search-container .fa.fa-spinner").removeClass('d-none');
+                    break;
+                case 'default':
+                case 'search':
+                    $(cont + ".search-container .fa.fa-search").removeClass('d-none');
+                    break;
+                case 'error':
+                    create_result_items('', 'error');
+                    $(cont + ".search-container .fa.fa-exclamation-triangle").removeClass('d-none').attr("title", _title);
+                    break;
+                case 'status-new':
+                    $(cont + ".status").addClass("new").attr("data-status", "new").html(options.new_text)
+                    break;
+                case 'status-save':
+                    $(cont + ".status").addClass("saved").attr("data-status", "saved").html(options.registered_text)
+                    break;
+            }
+        }
+
         function create_result_items(_text, _jsondata) {
+            if (_jsondata=="error"){
+                $("[data-id='" + _id + "'] .result-container").removeClass("open").html("");
+                return;
+            }
+
             let value_items = '';
             if (_jsondata != null) {
                 if (!$.isArray(_jsondata)) {
@@ -383,7 +387,7 @@ email   : piriaykut@hotmail.com
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" />' : '') + el.text + '</li>';
+                        value_items += '<li data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</li>';
                     }
                 } else {
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
@@ -392,44 +396,47 @@ email   : piriaykut@hotmail.com
                 value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
             }
 
-            $("[data-id='" + _id + "'] .result-container").attr("data-container", btoa(unescape(encodeURIComponent(JSON.stringify(_jsondata))))).html(value_items);
+            $("[data-id='" + _id + "'] .result-container").html(value_items);
+
+            if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
+                $("[data-id='" + _id + "'] .result-container").addClass("open");
+            }
 
             if (_text != '') {
                 let _selval = '0';
                 let _seltext = '';
 
-                if (_jsondata != null && _jsondata.length > 0) {
-                    for (let i = 0; i < _jsondata.length; i++) {
-                        const el = _jsondata[i];
-                        if (getMyslugify(el.text) == getMyslugify(_text)) {
-                            _selval = el.val;
-                            _seltext = el.text;
-
-                            $("[data-id='" + _id + "'] .search-container input[type='hidden']").val(el.val);
-                            break;
+                if (_jsondata != null) {
+                    if (_jsondata.length > 0) {
+                        for (let i = 0; i < _jsondata.length; i++) {
+                            const el = _jsondata[i];
+                            if (getMyslugify(el.text) == getMyslugify(_text)) {
+                                _selval = el.val;
+                                _seltext = el.text;
+                                break;
+                            }
                         }
                     }
                 }
 
-                let _modname = (_selval == "0" ? "new" : "saved");
-                let _othermodname = (_selval == "0" ? "saved" : "new");
-
-                if (timeout_spin != null){
-                    clearTimeout(timeout_spin);
+                if (_selval != '0') {
+                    show_icon('status-save');
+                } else {
+                    if (_text.trim() != ""){
+                        show_icon('status-new');
+                    }else{
+                        show_icon('default');
+                    }
                 }
 
-                timeout_spin = setTimeout(function() {
-                    $("[data-id='" + _id + "'] .status").removeClass(_othermodname).addClass(_modname).attr("data-status", _modname).html((_modname == 'new' ? options.new_text : options.registered_text));
-                    hide_spin();
-                }, 500);
+                $("[data-id='" + _id + "'] .search-container input[type='hidden']").val(_selval);
 
                 if (options.callback !== undefined && options.callback != null) {
                     options.callback({ object: self, val: (_selval == "0" ? null : _selval), text: _seltext.trim() });
                 }
-            }else{
-                hide_spin();
+            } else {
+                show_icon('default');
             }
-            
         }
 
         function getMyslugify(text) {
@@ -516,7 +523,9 @@ email   : piriaykut@hotmail.com
                         }
 
                         $(".search-container img", self).attr("src", _data.image);
+                        $(".search-container img", self).parent().attr("href", _data.image);
                     }
+
                     $(".search-container input[type='text']", self).val(_data.text);
                     $(".search-container input[type='hidden']", self).val(_data.val);
                     $(".status", self).addClass("saved").attr("data-status", "saved").html(self.attr("data-registered-text"));
