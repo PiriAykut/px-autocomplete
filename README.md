@@ -41,6 +41,7 @@
 >            maxheight: '100',<br>
 >            placeholder: '',<br>
 >            registered_text: 'registered',<br>
+>            image_title: 'Show Image',<br>
 >            new_text: 'new',<br>
 >            alert_text: 'No record available!'<br>
 >            style: "background:#fff; color:#444",<br>
@@ -76,4 +77,10 @@
 
 #### 3.
 ![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_3.png)
+
+#### 4.
+![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_4.png)
+
+#### 5.
+![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_5.png)
 
