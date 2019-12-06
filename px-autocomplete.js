@@ -309,6 +309,17 @@ create date : 04.11.2019
                                 return;
                             }
                             try {
+                                let _vl = $("[data-id='" + _id + "'] .search-container input[type='text']").val().trim();
+
+                                if (_vl !== _text){
+                                    if (_vl == ""){
+                                        show_icon("default");
+                                    }else{
+                                        show_icon("new");
+                                    }
+                                    return;
+                                }
+                                
                                 e = JSON.parse(e);
 
                                 if (e.durum) {
