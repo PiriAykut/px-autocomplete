@@ -42,10 +42,10 @@ create date : 04.11.2019
         if (self.prop('tagName') === "SELECT") {
             let jdata = [];
 
-            if ($("option:selected", self).length > 0) {
-                options.selected_value = $("option:selected", self).attr("value").trim();
-                options.selected_text = $("option:selected", self).html().trim();
-            }
+            // if ($("option:selected", self).length > 0) {
+            //     options.selected_value = $("option:selected", self).attr("value").trim();
+            //     options.selected_text = $("option:selected", self).html().trim();
+            // }
 
             $("option", self).each(function () {
                 jdata.push({ val: $(this).attr("value").trim(), text: $(this).html().trim() });
@@ -57,6 +57,7 @@ create date : 04.11.2019
 
             self.after(obj);
             self.remove();
+
             let name = self.attr("name");
             self = $("#" + id);
 

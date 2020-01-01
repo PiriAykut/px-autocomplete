@@ -123,7 +123,7 @@
 .px-auto-complete .result-container {
     display: none;
     position: absolute;
-    top: 30px;
+    top: 33px;
     left: 0px;
     z-index: 9;
     width: 100%;
