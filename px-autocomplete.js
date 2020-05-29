@@ -143,7 +143,7 @@ create date : 04.11.2019
             self.attr("style", options.style);
         }
 
-        show_icon('default');
+        myExtraMethod("clear");
 
         $(window).bind('click', function (event) {
             if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container') || $(event.target).parents().hasClass('search-container')) {
@@ -353,27 +353,27 @@ create date : 04.11.2019
         }
 
         function show_icon(_vl, _title) {
-            let cont = "[data-id='" + _id + "'] ";
-            $(cont + ".status").addClass('d-none').removeClass("new").removeClass("saved").attr("data-status", "").html("");
-            $(cont + ".search-container .fa:not(.d-none)").addClass('d-none');
+            //let cont = "[data-id='" + _id + "'] ";
+            $(".status", self).addClass('d-none').removeClass("new").removeClass("saved").attr("data-status", "").html("");
+            $(".search-container .fa:not(.d-none)", self).addClass('d-none');
 
             switch (_vl) {
                 case 'spin':
-                    $(cont + ".search-container .fa.fa-spinner").removeClass('d-none');
+                    $(".search-container .fa.fa-spinner", self).removeClass('d-none');
                     break;
                 case 'default':
                 case 'search':
-                    $(cont + ".search-container .fa.fa-search").removeClass('d-none');
+                    $(".search-container .fa.fa-search", self).removeClass('d-none');
                     break;
                 case 'error':
                     create_result_items('', 'error');
-                    $(cont + ".search-container .fa.fa-exclamation-triangle").removeClass('d-none').attr("title", _title);
+                    $(".search-container .fa.fa-exclamation-triangle", self).removeClass('d-none').attr("title", _title);
                     break;
                 case 'status-new':
-                    $(cont + ".status").addClass("new").attr("data-status", "new").html(options.new_text)
+                    $(".status", self).addClass("new").attr("data-status", "new").html(options.new_text)
                     break;
                 case 'status-save':
-                    $(cont + ".status").addClass("saved").attr("data-status", "saved").html(options.registered_text)
+                    $(".status", self).addClass("saved").attr("data-status", "saved").html(options.registered_text)
                     break;
             }
         }
@@ -542,6 +542,11 @@ create date : 04.11.2019
                     $(".search-container input[type='hidden']", self).val(_data.val);
                     $(".status", self).addClass("saved").attr("data-status", "saved").html(self.attr("data-registered-text"));
 
+                    break;
+                case 'clear':
+                    show_icon('default');
+                    $(".search-container input[type='text']", self).val("");
+                    $(".search-container input[type='hidden']", self).val("");
                     break;
             }
         };
