@@ -323,18 +323,18 @@ create date : 04.11.2019
                                 
                                 e = JSON.parse(e);
 
-                                if (e.durum) {
+                                if (e.length > 0) {
                                     if (first_ajax_data == null) {
-                                        first_ajax_data = e.data;
+                                        first_ajax_data = e;
                                     }
 
-                                    create_result_items(_text, e.data);
+                                    create_result_items(_text, e);
                                 } else {
                                     if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                                         $("[data-id='" + _id + "'] .result-container").addClass("open");
                                     }
 
-                                    $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + e.mesaj + '</span></li>');
+                                    $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>');
                                 }
                             } catch (e) { }
                         },
@@ -411,7 +411,7 @@ create date : 04.11.2019
             $("[data-id='" + _id + "'] .result-container").html(value_items);
 
             if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
-                $("[data-id='" + _id + "'] .result-container").addClass("open");
+                $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
             }
 
             if (_text != '') {
