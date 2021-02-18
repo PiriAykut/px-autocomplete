@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="px-autocomplete.js"></script>
+    <link rel="stylesheet" href="px-autocomplete.css">
+</head>
+
+<body>
+    <div id="objectid"></div>
+
+    <script type="text/javascript">
+        $("#objectid").pxautocomplete({
+            jsondata: [{ val: '1', image: null, text: 'data 1' }, { val: '2', image: null, text: 'data 2' }, { val: '3', image: null, text: 'data 3' }],
+            name: "requestname",
+            selected_value: null,
+            selected_text: null,
+            maxheight: '100',
+            placeholder: '',
+            registered_text: 'registered',
+            image_title: 'Show Image',
+            new_text: 'new',
+            alert_text: 'No record available!',
+            style: "background:#fff; color:#444",
+            focuscallback: function (e) { },
+            callback: function () { }
+        });
+
+    </script>
+</body>
+
+</html>

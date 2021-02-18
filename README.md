@@ -43,7 +43,7 @@
 >            registered_text: 'registered',<br>
 >            image_title: 'Show Image',<br>
 >            new_text: 'new',<br>
->            alert_text: 'No record available!'<br>
+>            alert_text: 'No record available!',<br>
 >            style: "background:#fff; color:#444",<br>
 >            focuscallback: function(e){},<br>
 >            callback : function(){}<br>

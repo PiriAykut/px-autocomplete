@@ -124,7 +124,7 @@
 .px-auto-complete .result-container {
     display: none;
     position: absolute;
-    top: 33px;
+    top: 20px;
     left: 0px;
     z-index: 9;
     width: 100%;
@@ -185,7 +185,10 @@
     cursor: pointer;
     background: #ebf9ff;
 }
-
+.px-auto-complete .result-container li:focus {
+    outline:none;
+    background: #ebf9ff;
+}
 .px-auto-complete .result-container li:last-child {
     border-bottom: none;
 }
