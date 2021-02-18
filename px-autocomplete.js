@@ -4,6 +4,35 @@ email       : piriaykut@hotmail.com
 create date : 04.11.2019
 */
 
+String.prototype.toTrLowerCasePxAuto = function () {
+    //     if((typeof this)!=='string')
+    //        return this;
+    try {
+        var str = [];
+        for (var i = 0; i < this.length; i++) {
+            var ch = this.charCodeAt(i);
+            var c = this.charAt(i);
+    
+            if (ch === 304) str.push('i');
+            else if (ch === 73) str.push('ı');
+            else if (ch === 286) str.push('ğ');
+            else if (ch === 220) str.push('ü');
+            else if (ch === 350) str.push('ş');
+            else if (ch === 214) str.push('ö');
+            else if (ch === 199) str.push('ç');
+            else if (ch === 399) str.push('ə');
+            else if (ch >= 65 && ch <= 90)
+                str.push(c.toLowerCase());
+            else
+                str.push(c);
+        }
+        return str.join('');    
+    } catch (error) {
+        return '';
+    }
+    
+};
+
 (function ($) {
     $.fn.pxautocomplete = function (options, _data) {
         var mainclass = "px-auto-complete";
@@ -183,7 +212,7 @@ create date : 04.11.2019
                 if (_text.trim() != "") {
                     status_clear();
 
-                    if ($("[data-id='" + _id + "'] .result-container li[data-value]").length == 1 && _text.toLowerCase() == $("[data-id='" + _id + "'] .result-container li[data-value]").html().toLowerCase()) {
+                    if ($("[data-id='" + _id + "'] .result-container li[data-value]").length == 1 && _text.toTrLowerCasePxAuto() == $("[data-id='" + _id + "'] .result-container li[data-value]").html().toTrLowerCasePxAuto()) {
                         $("[data-id='" + _id + "'] .search-container input[type='hidden']").val($("[data-id='" + _id + "'] .result-container li[data-value]").attr("data-value"));
                     }
 
@@ -242,31 +271,20 @@ create date : 04.11.2019
                 }
             })
             .on("keydown", "[data-id='" + _id + "'] .result-container li", function (e) {
-                let nextindex = -1;
-                switch (e.key) {
-                    case "ArrowUp":
-                        //nextindex = (parseInt($(this).attr("tabindex")) - 1);
+                switch (e.keyCode) {
+                    case 38:
                         $(this).prev().focus();
                         break;
-                    case "ArrowDown":
+                    case 40:
                         $(this).next().focus();
-                        // nextindex = (parseInt($(this).attr("tabindex")) + 1);
-
-                        // if (nextindex >= $("[data-id='" + _id + "'] .result-container li").length){
-                        //     nextindex = 0;
-                        // }
                         break;
-                    case "Enter":
-                        $(this).trigger("click");
+                    case 13:
+                        $("a", $(this)).trigger("click");
                         break;
-                }
-            
-                if (nextindex > -1){
-                    $("[data-id='" + _id + "'] .result-container li:eq(" + nextindex + ")").focus();
                 }
                 return false;
             })
-            .on("click", "[data-id='" + _id + "'] .result-container li", function () {
+            .on("click", "[data-id='" + _id + "'] .result-container li a", function () {
                 if ($(this).hasClass("nodata")) return;
 
                 if (blur_timeout != null) {
@@ -274,14 +292,14 @@ create date : 04.11.2019
                     blur_timeout = null;
                 }
 
-                let _val = $(this).attr("data-value");
+                let _val = $(this).parents("li").attr("data-value");
 
                 if (_val == undefined) {
-                    _val = $("[data-id='" + _id + "'] .result-container").index($(this));
+                    _val = $("[data-id='" + _id + "'] .result-container").index($(this).parents("li"));
                 }
 
                 let _text = $(this).html();
-                if ($(this).attr("data-image") !== undefined) {
+                if ($(this).parents("li").attr("data-image") !== undefined) {
                     if (_text.indexOf('<img') > -1) {
                         let p = _text.indexOf(">", 3);
                         if (p > -1) {
@@ -292,8 +310,8 @@ create date : 04.11.2019
                     if (!$("[data-id='" + _id + "'] .search-container").hasClass('show-image'))
                         $("[data-id='" + _id + "'] .search-container").addClass('show-image');
 
-                    $("[data-id='" + _id + "'] .search-container img").attr("src", $(this).attr("data-image"));
-                    $("[data-id='" + _id + "'] .search-container img").parent().attr("href", $(this).attr("data-image"));
+                    $("[data-id='" + _id + "'] .search-container img").attr("src", $(this).parents("li").attr("data-image"));
+                    $("[data-id='" + _id + "'] .search-container img").parent().attr("href", $(this).parents("li").attr("data-image"));
                 }
 
                 $("[data-id='" + _id + "'] .search-container input[type='text']").val(_text);
@@ -430,7 +448,7 @@ create date : 04.11.2019
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</li>';
+                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="#">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
                     }
                 } else {
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
@@ -497,7 +515,7 @@ create date : 04.11.2019
             return text.replace(/[^-a-zA-Z0-9\s]+/ig, '') // remove non-alphanumeric chars
                 .replace(/\s/gi, "-") // convert spaces to dashes
                 .replace(/[-]+/gi, "-") // trim repeated dashes
-                .toLowerCase();
+                .toTrLowerCasePxAuto();
 
         }
 
@@ -521,35 +539,53 @@ create date : 04.11.2019
 
             if (Array.isArray(field) === false) {
                 if (field !== "") {
-                    arrCriteria.push([field, value.toLowerCase()]);
+                    arrCriteria.push([field, value.toTrLowerCasePxAuto()]);
                 }
             } else {
                 for (var i = 0; i < field.length; i++) {
-                    arrCriteria.push([field[i], value[i].toLowerCase()]);
+                    arrCriteria.push([field[i], value[i].toTrLowerCasePxAuto()]);
                 }
             }
+            
             if (arrCriteria.length > 0 && arr !== undefined && arr !== null && arr.length > 0) {
-                var kriter = "";
-                var status = true;
-                for (var i = 0; i < arrCriteria.length; i++) {
-                    eval('status = arr[0].' + arrCriteria[i][0] + '!==undefined');
-                    if (!status) {
-                        return null;
+                rv = arr.filter(function(e){
+                    let status = false;
+                    for (let i = 0; i < arrCriteria.length; i++) {
+                        const el = arrCriteria[i];
+                        
+                        if (e.text.toTrLowerCasePxAuto().indexOf(el[1]) !== -1){
+                            status = true;
+                            break;
+                        }
                     }
-
-                    kriter += (kriter !== "" ? " && " : "") +
-                        '(' +
-                        '   ($.type(i).toString() == "object" && ' + (arrCriteria[i][1] == null ? 'i.' + arrCriteria[i][0] + operator + 'null' : 'i.' + arrCriteria[i][0] + '!==null && i.' + arrCriteria[i][0] + '.toString().toLowerCase() ' + operator + ' "' + arrCriteria[i][1] + '"') + ') || ' +
-                        '   ($.type(i).toString() == "object" && ' + (arrCriteria[i][1] == null ? '0=0' : 'i.' + arrCriteria[i][0] + '!==null && i.' + arrCriteria[i][0] + '.toString().toLowerCase().indexOf("' + arrCriteria[i][1] + '") > -1') + ') || ' +
-                        '   ($.type(n).toString() == "object" && ' + (arrCriteria[i][1] == null ? 'n.' + arrCriteria[i][0] + operator + 'null' : 'n.' + arrCriteria[i][0] + '!==null && n.' + arrCriteria[i][0] + '.toString().toLowerCase() ' + operator + '"' + arrCriteria[i][1] + '"') + ') || ' +
-                        '   ($.type(n).toString() == "object" && ' + (arrCriteria[i][1] == null ? '0=0' : 'n.' + arrCriteria[i][0] + '!==null && n.' + arrCriteria[i][0] + '.toString().toLowerCase().indexOf("' + arrCriteria[i][1] + '") > -1') + ') ' +
-                        ')';
-                }
-                eval('rv = arr.filter(function (i, n) { return (' + kriter + ')});');
+                    return status;
+                });
             }
+
+            // if (arrCriteria.length > 0 && arr !== undefined && arr !== null && arr.length > 0) {
+            //     var kriter = "";
+            //     var status = true;
+            //     for (var i = 0; i < arrCriteria.length; i++) {
+            //         eval('status = arr[0].' + arrCriteria[i][0] + '!==undefined');
+            //         if (!status) {
+            //             return null;
+            //         }
+
+            //         kriter += (kriter !== "" ? " && " : "") +
+            //             '(' +
+            //             '   ($.type(i).toString() == "object" && ' + (arrCriteria[i][1] == null ? 'i.' + arrCriteria[i][0] + operator + 'null' : 'i.' + arrCriteria[i][0] + '!==null && i.' + arrCriteria[i][0] + '.toString().toTrLowerCasePxAuto() ' + operator + ' "' + arrCriteria[i][1] + '"') + ') || ' +
+            //             '   ($.type(i).toString() == "object" && ' + (arrCriteria[i][1] == null ? '0=0' : 'i.' + arrCriteria[i][0] + '!==null && i.' + arrCriteria[i][0] + '.toString().toTrLowerCasePxAuto().indexOf("' + arrCriteria[i][1] + '") > -1') + ') || ' +
+            //             '   ($.type(n).toString() == "object" && ' + (arrCriteria[i][1] == null ? 'n.' + arrCriteria[i][0] + operator + 'null' : 'n.' + arrCriteria[i][0] + '!==null && n.' + arrCriteria[i][0] + '.toString().toTrLowerCasePxAuto() ' + operator + '"' + arrCriteria[i][1] + '"') + ') || ' +
+            //             '   ($.type(n).toString() == "object" && ' + (arrCriteria[i][1] == null ? '0=0' : 'n.' + arrCriteria[i][0] + '!==null && n.' + arrCriteria[i][0] + '.toString().toTrLowerCasePxAuto().indexOf("' + arrCriteria[i][1] + '") > -1') + ') ' +
+            //             ')';
+            //     }
+            //     debugger
+            //     eval('rv = arr.filter(function (i, n) { return (' + kriter + ')});');
+            // }
             return rv;
         };
 
+        
         function myExtraMethod(_type, _data) {
             switch (_type) {
                 case 'set':

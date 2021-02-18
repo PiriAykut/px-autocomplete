@@ -3,13 +3,11 @@
 }
 
 .px-auto-complete {
-    float: left;
     position: relative;
     width: 100%;
     background: #fff;
     border: 1px solid #e4e6fc;
     border-radius: 3px;
-    padding: 5px;
 }
 
 .px-auto-complete .status {
@@ -63,7 +61,6 @@
 }
 
 .px-auto-complete .search-container {
-    float: left;
     position: relative;
     width: 100%;
 }
@@ -112,6 +109,7 @@
 }
 
 .px-auto-complete .search-container input {
+    display: block;
     border: none;
     width: 100%;
     height: 24px;
@@ -124,10 +122,11 @@
 .px-auto-complete .result-container {
     display: none;
     position: absolute;
-    top: 20px;
-    left: 0px;
+    /* top: 33px; */
+    /* left: 0px; */
     z-index: 9;
     width: 100%;
+    margin: 0 !important;
     min-height: 100px;
     max-height: 300px;
     border: 1px solid #e4e6fc;
@@ -140,7 +139,9 @@
 }
 
 .px-auto-complete .result-container.open {
-    display: block !important;
+    /* display: block !important; */
+    display: flow-root !important;
+
 }
 
 .px-auto-complete .result-container::-webkit-scrollbar {
@@ -172,7 +173,13 @@
     border-bottom: 1px solid #f1f1f1;
     padding: 5px 8px;
 }
+.px-auto-complete .result-container li a{
+    display:block;
+    width: 100%;
+    color: #444;   
+    text-decoration: unset;
 
+}
 .px-auto-complete .result-container li img {
     float: left;
     height: 30px;
