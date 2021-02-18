@@ -212,7 +212,7 @@ create date : 04.11.2019
                 }
             })
             .on("mouseleave", "[data-id='" + _id + "']", function () {
-                //$("[data-id='" + _id + "'] .result-container").removeClass("open");
+                $("[data-id='" + _id + "'] .result-container").removeClass("open");
             })
             .on("input", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 $("[data-id='" + _id + "'] .search-container input[type='hidden']").val("0");
