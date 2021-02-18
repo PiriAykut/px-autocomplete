@@ -238,20 +238,23 @@ create date : 04.11.2019
             .on("keydown", "[data-id='" + _id + "'] .search-container input[type='text']", function (e) {
                 if (e.key === "ArrowDown"){
                     $("[data-id='" + _id + "'] .result-container li:eq(0)").focus();
+                    return false;
                 }
             })
             .on("keydown", "[data-id='" + _id + "'] .result-container li", function (e) {
                 let nextindex = -1;
                 switch (e.key) {
                     case "ArrowUp":
-                        nextindex = (parseInt($(this).attr("tabindex")) - 1);
+                        //nextindex = (parseInt($(this).attr("tabindex")) - 1);
+                        $(this).prev().focus();
                         break;
                     case "ArrowDown":
-                        nextindex = (parseInt($(this).attr("tabindex")) + 1);
+                        $(this).next().focus();
+                        // nextindex = (parseInt($(this).attr("tabindex")) + 1);
 
-                        if (nextindex >= $("[data-id='" + _id + "'] .result-container li").length){
-                            nextindex = -1;
-                        }
+                        // if (nextindex >= $("[data-id='" + _id + "'] .result-container li").length){
+                        //     nextindex = 0;
+                        // }
                         break;
                     case "Enter":
                         $(this).trigger("click");
@@ -261,6 +264,7 @@ create date : 04.11.2019
                 if (nextindex > -1){
                     $("[data-id='" + _id + "'] .result-container li:eq(" + nextindex + ")").focus();
                 }
+                return false;
             })
             .on("click", "[data-id='" + _id + "'] .result-container li", function () {
                 if ($(this).hasClass("nodata")) return;
@@ -426,7 +430,7 @@ create date : 04.11.2019
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li tabindex="' + i + '" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</li>';
+                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '>' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</li>';
                     }
                 } else {
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
