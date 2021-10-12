@@ -45,6 +45,7 @@
 >            new_text: 'new',<br>
 >            alert_text: 'No record available!',<br>
 >            style: "background:#fff; color:#444",<br>
+>            class: "extraclass default null",
 >            focuscallback: function(e){},<br>
 >            callback : function(){}<br>
 >        });<br>
