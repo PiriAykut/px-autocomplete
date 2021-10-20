@@ -277,9 +277,18 @@ String.prototype.toTrLowerCasePxAuto = function () {
                 }
             })
             .on("keydown", "[data-id='" + _id + "'] .search-container input[type='text']", function (e) {
-                if (e.key === "ArrowDown") {
-                    $("[data-id='" + _id + "'] .result-container li:eq(0)").focus();
-                    return false;
+                switch (e.key) {
+                    case "Tab":
+                        if ($("[data-id='" + _id + "'] .result-container li:not(.nodata)").length > 0) {
+                            $("[data-id='" + _id + "'] .result-container li:eq(0)").focus();
+
+                        } else {
+                            $("[data-id='" + _id + "'] .result-container").removeClass("open");
+                        }
+                        return true;
+                    case "ArrowDown":
+                        $("[data-id='" + _id + "'] .result-container li:eq(0)").focus();
+                        return false;
                 }
             })
             .on("keydown", "[data-id='" + _id + "'] .result-container li", function (e) {
@@ -460,7 +469,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="#">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
+                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="javascript:void(0);">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
                     }
                 } else {
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
