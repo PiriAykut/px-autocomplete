@@ -636,8 +636,11 @@ String.prototype.toTrLowerCasePxAuto = function () {
                     $(".search-container input[type='text']", self).val("");
                     $(".search-container input[type='hidden']", self).val("");
                     break;
+                case "setjsondata":
+                    options.jsondata = _data;
+                    $("[data-id='" + _id + "'] .search-container input[type='text']").val("").trigger("input");
+                    break;
             }
         };
-
     }
 })(jQuery);

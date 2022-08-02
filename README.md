@@ -65,6 +65,10 @@
 ### set data:
 > $("#objectid").pxautocomplete("set", { val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' });<br>
 
+### set new json data:
+> $("#objectid").pxautocomplete("setjsondata", [{ val: '16', image: 'http://127.0.0.1:8000/images/logo.png', text: 'Bursa' }, ... ]);<br>
+
+
 ### view:
 #### 1.
 ![alt text](https://raw.githubusercontent.com/PiriAykut/px-autocomplete/master/screenshots/Screenshot_1.png)
