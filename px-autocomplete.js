@@ -641,7 +641,6 @@ String.prototype.toTrLowerCasePxAuto = function () {
                     $(".px-auto-complete-jdata", self).html(JSON.stringify(_data));
 
                     myExtraMethod("clear");
-                    get_autocomplate_data("");
                     break;
             }
         };
