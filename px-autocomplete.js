@@ -166,6 +166,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             '   <i class="fa fa-exclamation-triangle d-none"></i>' +
             '   <i class="fa fa-search"></i>' +
             '   <i class="fa fa-spinner fa-spin d-none"></i>' +
+            '   <div class="px-auto-complete-jdata">' + JSON.stringify(options.jsondata) + '</div>'+
             '</div>' +
             '<ul class="result-container" style="max-height:' + options.maxheight + 'px !important"></ul>');
 
@@ -351,13 +352,13 @@ String.prototype.toTrLowerCasePxAuto = function () {
 
         function get_autocomplate_data(_text) {
             show_icon('spin');
-
-            if (options.jsondata != null) {
+            let jsondata = JSON.parse($(".px-auto-complete-jdata", self).html());
+            if (jsondata != null) {
                 let sonuc = null;
                 if (_text.trim() != "") {
-                    sonuc = jsonfilter(options.jsondata, "text", _text);
+                    sonuc = jsonfilter(jsondata, "text", _text);
                 } else {
-                    sonuc = options.jsondata;
+                    sonuc = jsondata;
                 }
 
                 create_result_items(_text, sonuc);
@@ -637,9 +638,10 @@ String.prototype.toTrLowerCasePxAuto = function () {
                     $(".search-container input[type='hidden']", self).val("");
                     break;
                 case "setjsondata":
-                    options.jsondata = _data;
-                    
+                    $(".px-auto-complete-jdata", self).html(JSON.stringify(_data));
+
                     myExtraMethod("clear");
+                    get_autocomplate_data("");
                     break;
             }
         };

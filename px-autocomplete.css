@@ -210,3 +210,7 @@
     border: 1px solid rgb(241, 209, 209);
     border-radius: 5px;
 }
+
+.px-auto-complete-jdata{
+    display: none;
+}

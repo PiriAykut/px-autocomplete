@@ -4,6 +4,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="px-autocomplete.js"></script>
     <link rel="stylesheet" href="px-autocomplete.css">
+    <style>
+        body {
+            background: #000;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,6 +39,12 @@
             callback: function () { }
         });
 
+
+        setTimeout(() => {
+            alert("SET");
+
+            $("#objectid").pxautocomplete("setjsondata", [{ val: '1', image: null, text: 'deneme' }, { val: '2', image: null, text: 'test' }]);
+        }, 5000);
     </script>
 </body>
 
