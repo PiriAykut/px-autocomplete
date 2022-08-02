@@ -638,7 +638,8 @@ String.prototype.toTrLowerCasePxAuto = function () {
                     break;
                 case "setjsondata":
                     options.jsondata = _data;
-                    $("[data-id='" + _id + "'] .search-container input[type='text']").val("").trigger("input");
+                    
+                    myExtraMethod("clear");
                     break;
             }
         };
