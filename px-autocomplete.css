@@ -118,7 +118,9 @@
     background: transparent;
     outline: none;
 }
-
+.px-auto-complete .search-container input::placeholder {
+    color: #adb5bd
+}
 .px-auto-complete .result-container {
     display: none;
     position: absolute;
