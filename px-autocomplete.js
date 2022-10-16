@@ -56,6 +56,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             jsondata: null,
             ajaxpage: null,
             ajax_query_objects: null,
+            use_first_data: true,
             maxheight: '300',
             style: null,
             class: null,
@@ -365,7 +366,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
                 create_result_items(_text, sonuc);
 
             } else if (options.ajaxpage != null) {
-                let isrunajax = (_text.trim() != "" || (_text.trim() == "" && first_ajax_data == null));
+                let isrunajax = (_text.trim() != "" || (_text.trim() == "" && (options.use_first_data && first_ajax_data == null || !options.use_first_data));
 
                 if (isrunajax) {
                     let _extra = "";
