@@ -55,6 +55,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             selected_text: null,
             jsondata: null,
             ajaxpage: null,
+            ajax_query_objects: null,
             maxheight: '300',
             style: null,
             class: null,
@@ -166,7 +167,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             '   <i class="fa fa-exclamation-triangle d-none"></i>' +
             '   <i class="fa fa-search"></i>' +
             '   <i class="fa fa-spinner fa-spin d-none"></i>' +
-            '   <div class="px-auto-complete-jdata">' + JSON.stringify(options.jsondata) + '</div>'+
+            '   <div class="px-auto-complete-jdata">' + JSON.stringify(options.jsondata) + '</div>' +
             '</div>' +
             '<ul class="result-container" style="max-height:' + options.maxheight + 'px !important"></ul>');
 
@@ -367,6 +368,15 @@ String.prototype.toTrLowerCasePxAuto = function () {
                 let isrunajax = (_text.trim() != "" || (_text.trim() == "" && first_ajax_data == null));
 
                 if (isrunajax) {
+                    let _extra = "";
+                    if (options.ajax_query_objects != null && Array.isArray(options.ajax_query_objects) && options.ajax_query_objects.length > 0) {
+                        for (let i = 0; i < options.ajax_query_objects.length; i++) {
+                            const el = options.ajax_query_objects[i];
+                            if ($(el).attr("name") != undefined) {
+                                _extra += (_extra != "" ? "&" : "") + $(el).attr("name") + "=" + encodeURIComponent($(el).val());
+                            }
+                        }
+                    }
 
                     $.ajax({
                         headers: {
@@ -374,7 +384,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
                         },
                         type: "POST",
                         url: window.location.origin + "/" + options.ajaxpage,
-                        data: "text=" + encodeURIComponent(_text),
+                        data: "text=" + encodeURIComponent(_text) + (_extra != "" ? "&" + _extra : ""),
                         timeout: 15000,
                         success: function (e) {
                             if (e === null) {
