@@ -204,9 +204,9 @@ String.prototype.toTrLowerCasePxAuto = function () {
         });
 
         $("body")
-            .on("click", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
-                $(this).trigger("focus");
-            })
+            // .on("click", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
+            //     $(this).trigger("focus");
+            // })
             .on("focus", "[data-id='" + _id + "'] .search-container input[type='text']", function () {
                 $(this).select();
 
@@ -276,7 +276,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
 
                     search_timeout = setTimeout(function () {
                         get_autocomplate_data(_text);
-                    }, 100);
+                    }, 1500);
                 }
             })
             .on("keydown", "[data-id='" + _id + "'] .search-container input[type='text']", function (e) {
