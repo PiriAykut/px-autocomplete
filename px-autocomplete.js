@@ -412,6 +412,8 @@ String.prototype.toTrLowerCasePxAuto = function () {
 
                                     create_result_items(_text, e);
                                 } else {
+                                    show_icon('default');
+
                                     if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                                         $("[data-id='" + _id + "'] .result-container").addClass("open");
                                     }
