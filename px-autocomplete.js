@@ -409,7 +409,6 @@ String.prototype.toTrLowerCasePxAuto = function () {
                                     if (first_ajax_data == null) {
                                         first_ajax_data = e;
                                     }
-
                                     create_result_items(_text, e);
                                 } else {
                                     show_icon('default');
