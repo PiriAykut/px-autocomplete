@@ -515,6 +515,10 @@ String.prototype.toTrLowerCasePxAuto = function () {
                         $("[data-id='" + _id + "'] .result-container").removeClass("open");
                     }
                 }
+            }else{
+                if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
+                    $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
+                }
             }
 
             if (_text != '') {
