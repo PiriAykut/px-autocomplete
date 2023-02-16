@@ -355,6 +355,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
 
         function get_autocomplate_data(_text) {
             show_icon('spin');
+
             let jsondata = JSON.parse($(".px-auto-complete-jdata", self).html());
             if (jsondata != null) {
                 let sonuc = null;
@@ -475,6 +476,8 @@ String.prototype.toTrLowerCasePxAuto = function () {
             }
 
             let value_items = '';
+            let isalert = false;
+
             if (_jsondata != null) {
                 if (!$.isArray(_jsondata)) {
                     alert("jsondata error : array and [{ val: 0, text : ''}, ...]");
@@ -492,16 +495,26 @@ String.prototype.toTrLowerCasePxAuto = function () {
                         value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="javascript:void(0);">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
                     }
                 } else {
+                    isalert = true;
                     value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
                 }
             } else {
+                isalert = true;
                 value_items = '<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>';
             }
 
             $("[data-id='" + _id + "'] .result-container").html(value_items);
 
-            if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
-                $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
+            if(isalert){
+                if (options.not_available_show_result_panel){
+                    if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
+                        $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
+                    }
+                }else{
+                    if ($("[data-id='" + _id + "'] .result-container").hasClass("open")) {
+                        $("[data-id='" + _id + "'] .result-container").removeClass("open");
+                    }
+                }
             }
 
             if (_text != '') {
