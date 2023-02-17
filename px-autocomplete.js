@@ -147,6 +147,15 @@ String.prototype.toTrLowerCasePxAuto = function () {
             self.removeAttr("name");
         }
 
+        if (self.attr("data-value-id") != undefined) {
+            options.selected_value = self.attr("data-value-id");
+            self.removeAttr("data-value-id");
+        }
+        if (self.attr("data-value-text") != undefined) {
+            options.selected_text = self.attr("data-value-text");
+            self.removeAttr("data-value-text");
+        }
+
         if (options.alert_text == null || options.alert_text == "") {
             options.alert_text = "Kayıt mevcut değil!";
         }
@@ -414,14 +423,14 @@ String.prototype.toTrLowerCasePxAuto = function () {
                                     create_result_items(_text, e);
                                 } else {
                                     show_icon('default');
-                                    
-                                    if (options.not_available_show_result_panel){
+
+                                    if (options.not_available_show_result_panel) {
                                         if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                                             $("[data-id='" + _id + "'] .result-container").addClass("open");
                                         }
-    
+
                                         $("[data-id='" + _id + "'] .result-container").html('<li class="nodata"><span class="alert">' + options.alert_text + '</span></li>');
-                                    }else{
+                                    } else {
                                         if ($("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                                             $("[data-id='" + _id + "'] .result-container").removeClass("open");
                                         }
@@ -505,17 +514,17 @@ String.prototype.toTrLowerCasePxAuto = function () {
 
             $("[data-id='" + _id + "'] .result-container").html(value_items);
 
-            if(isalert){
-                if (options.not_available_show_result_panel){
+            if (isalert) {
+                if (options.not_available_show_result_panel) {
                     if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                         $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
                     }
-                }else{
+                } else {
                     if ($("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                         $("[data-id='" + _id + "'] .result-container").removeClass("open");
                     }
                 }
-            }else{
+            } else {
                 if (!$("[data-id='" + _id + "'] .result-container").hasClass("open")) {
                     $("[data-id='" + _id + "'] .result-container").addClass("open").scrollTop(0);
                 }
