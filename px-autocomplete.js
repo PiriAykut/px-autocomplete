@@ -197,7 +197,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             }
         }
 
-        myExtraMethod("clear");
+        // myExtraMethod("clear");
 
         $(window).bind('click', function (event) {
             if ($(event.target).hasClass(mainclass) || $(event.target).parents('ul').hasClass('result-container') || $(event.target).parents().hasClass('search-container')) {
