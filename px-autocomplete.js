@@ -64,6 +64,7 @@ String.prototype.toTrLowerCasePxAuto = function () {
             placeholder: null,
             focuscallback: null,
             callback: null,
+            show_info_text: true,
             image_title: 'Show Image',
             registered_text: 'registered',
             new_text: 'new',

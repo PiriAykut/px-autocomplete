@@ -1,3 +1,15 @@
+## description
+>Allows to filter selective data and add new data.
+>It works like a SELECT object but provides filtering with a JSON data block.
+>Allows you to perform live search from database with AJAX url.
+>If the written data is not in the data block, it marks it as new, so it provides an opportunity to define it like an INPUT object.
+
+## description TR
+>Seçimli verileri süzmeye ve yeni verileri eklemeye olanak tanır. 
+>SELECT nesnesi gibi çalışır ancak JSON data bloğu ile filtreleme olanağı sağlar. 
+>AJAX url ile veritabanından canlı arama yapmanıza imkan verir. 
+>Yazılan veri eğer data bloğunda yoksa yeni olduğunu işaretler bu sayene INPUT nesnesi gibi yani tanımlama imkanı sağlar.
+
 
 ## install
 > npm i jquery <br><br>
