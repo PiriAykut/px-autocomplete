@@ -1,6 +1,6 @@
 {
   "name": "px-autocomplete-jquery",
-  "version": "1.0.42",
+  "version": "1.0.43",
   "description": "autocomplete input select box. Allows to filter selective data and add new data. It works like a SELECT object but provides filtering with a JSON data block. Allows you to perform live search from database with AJAX url. If the written data is not in the data block, it marks it as new, so it provides an opportunity to define it like an INPUT object.",
   "main": "px-autocomplete.js",
   "scripts": {
