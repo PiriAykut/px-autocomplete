@@ -32,14 +32,6 @@ String.prototype.toTrLowerCasePxAuto = function () {
     }
 
 };
-String.prototype.replaceAllAutoComplate = function (search, replacement) {
-    //     if((typeof this)!=='string')
-    //      
-    //          return this;
-    var target = this;
-    return target.split(search).join(replacement);
-};
-
 
 (function ($) {
     $.fn.pxautocomplete = function (options, _data) {
@@ -365,7 +357,7 @@ String.prototype.replaceAllAutoComplate = function (search, replacement) {
                 $("[data-id='" + _id + "'] .result-container").removeClass("open");
 
                 if (options.callback !== undefined && options.callback != null) {
-                    options.callback({ object: self, val: _val, text: $(this).html(), json: JSON.parse($(this).parents("li").attr("data-json")) });
+                    options.callback({ object: self, val: _val, text: $(this).html() });
                 }
             });
 
@@ -510,7 +502,7 @@ String.prototype.replaceAllAutoComplate = function (search, replacement) {
                 if (_jsondata.length > 0) {
                     for (let i = 0; i < _jsondata.length; i++) {
                         const el = _jsondata[i];
-                        value_items += '<li tabindex="-1" data-json="' + JSON.stringify(el).replaceAllAutoComplate('"', "'") + '" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="javascript:void(0);">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
+                        value_items += '<li tabindex="-1" data-value="' + el.val + '" ' + (el.image !== undefined && el.image != null ? 'data-image="' + el.image + '"' : '') + '><a href="javascript:void(0);">' + (el.image !== undefined && el.image != null ? '<img src="' + el.image + '" onerror="this.src=\'' + noimage + '\';" />' : '') + el.text + '</a></li>';
                     }
                 } else {
                     isalert = true;
